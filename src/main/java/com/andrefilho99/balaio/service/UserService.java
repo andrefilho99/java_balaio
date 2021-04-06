@@ -6,10 +6,10 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.andrefilho99.balaio.exception.TokenException;
 import com.andrefilho99.balaio.exception.UserNotFoundException;
 import com.andrefilho99.balaio.model.User;
 import com.andrefilho99.balaio.repository.UserRepository;
-import com.andrefilho99.balaio.utils.PasswordUtils;
 
 @Service
 public class UserService {
@@ -17,18 +17,32 @@ public class UserService {
 	@Autowired
 	private UserRepository userRepository;
 	
-	@Autowired
-	private PasswordUtils passwordUtils;
 	//CRUD
 	
-	public void create(String nickname, String email, String password) {
+	public User create(String nickname, String number) {
 		
 		User user = new User();
 		
 		user.setNickname(nickname);
-		user.setEmail(email);
-		user.setPassword(passwordUtils.encodePassword(password));
+		user.setNumber(number);
 		
+		userRepository.save(user);
+		
+		return user;
+	}
+	
+	public void validate(Integer id, String token) {
+		
+		User user = userRepository.findById(id).get();
+		String userNumber = user.getNumber();
+		
+		System.out.println(userNumber.substring(5));
+		
+		if(!userNumber.substring(5).equals(token)) {
+			throw new TokenException("The given token is not valid.");
+		}
+		
+		user.setValidaded(true);
 		userRepository.save(user);
 	}
 	

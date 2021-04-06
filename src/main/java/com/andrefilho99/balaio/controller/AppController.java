@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.andrefilho99.balaio.exception.TokenException;
 import com.andrefilho99.balaio.exception.UserNotFoundException;
 import com.andrefilho99.balaio.model.User;
 import com.andrefilho99.balaio.service.BalaioService;
@@ -34,9 +34,18 @@ public class AppController {
 	
 	//User
 	
-	@PostMapping
-	public void createUser(@RequestHeader("nickname") String nickname, @RequestHeader("email") String email, @RequestHeader("password") String password) {
-		userService.create(nickname, email, password);
+	@PostMapping(produces = "application/json")
+	public User createUser(@RequestHeader("nickname") String nickname, @RequestHeader("number") String number) {
+		return userService.create(nickname, number);
+	}
+	
+	@PostMapping(value = "/{userId}/validate")
+	public void validateUser(@PathVariable("userId")Integer userId, @RequestHeader("token") String token) {
+		try {
+			userService.validate(userId, token);
+		} catch(TokenException ex) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage());
+		}
 	}
 	
 	@GetMapping(value = "/{userId}", produces = "application/json")

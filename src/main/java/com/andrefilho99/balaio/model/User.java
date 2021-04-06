@@ -25,11 +25,8 @@ public class User {
 	@Column(name = "NICKNAME")
 	private String nickname;
 	
-	@Column(name = "EMAIL")
-	private String email;
-	
-	@Column(name = "PASSWORD")
-	private String password;
+	@Column(name = "number")
+	private String number;
 	
 	@OneToMany(mappedBy = "from")
 	private List<Contact> contacts;
@@ -42,12 +39,16 @@ public class User {
 	@OneToMany(mappedBy = "to")
 	private List<Balaio> balaiosReceived;
 	
+	@Column(name = "IS_VALIDADED")
+	private boolean isValidaded;
+	
 	public User() {
 		contacts = new ArrayList<Contact>();
 		balaiosSent = new ArrayList<Balaio>();
 		balaiosReceived = new ArrayList<Balaio>();
+		isValidaded = false;
 	}
-	
+
 	public Integer getUserId() {
 		return userId;
 	}
@@ -64,20 +65,12 @@ public class User {
 		this.nickname = nickname;
 	}
 
-	public String getEmail() {
-		return email;
+	public String getNumber() {
+		return number;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
+	public void setNumber(String number) {
+		this.number = number;
 	}
 
 	public List<Contact> getContacts() {
@@ -102,5 +95,13 @@ public class User {
 
 	public void setBalaiosReceived(List<Balaio> balaiosReceived) {
 		this.balaiosReceived = balaiosReceived;
+	}
+
+	public boolean isValidaded() {
+		return isValidaded;
+	}
+
+	public void setValidaded(boolean isValidaded) {
+		this.isValidaded = isValidaded;
 	}
 }
