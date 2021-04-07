@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.andrefilho99.balaio.exception.BalaioException;
 import com.andrefilho99.balaio.exception.TokenException;
 import com.andrefilho99.balaio.exception.UserNotFoundException;
+import com.andrefilho99.balaio.model.Balaio;
 import com.andrefilho99.balaio.model.User;
 import com.andrefilho99.balaio.service.BalaioService;
 import com.andrefilho99.balaio.service.ContactService;
@@ -62,7 +64,7 @@ public class AppController {
 	
 	@PostMapping(value = "/{userId}/contacts")
 	public void addContact(@PathVariable("userId")Integer userId, @RequestHeader("nickname") String nickname){
-		try{
+		try {
 			contactService.create(userService.get(userId), userService.getByNickname(nickname));
 		} catch(UserNotFoundException ex) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
@@ -74,5 +76,14 @@ public class AppController {
 	@PostMapping(value = "/{userId}/balaios")
 	public void createBalaio(@PathVariable("userId")Integer userId, @RequestHeader("message") String message, @RequestHeader("to") String nickname, @RequestHeader("latitude") Double latitude, @RequestHeader("longitude") Double longitude){
 		balaioService.create(message, userService.get(userId), userService.getByNickname(nickname), latitude, longitude);
+	}
+	
+	@GetMapping(value = "/{userId}/balaios/search", produces = "application/json")
+	public Balaio searchBalaio(@PathVariable("userId")Integer userId, @RequestHeader("latitude") Double latitude, @RequestHeader("longitude") Double longitude) {
+		try {
+			return balaioService.getByDistance(userId, latitude, longitude);
+		} catch(BalaioException ex) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+		}
 	}
 }

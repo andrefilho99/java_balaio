@@ -26,7 +26,7 @@ public class Contact {
 	@JoinColumn(name = "USER_ID_FROM")
 	private User from;
 	
-	@JsonIgnoreProperties(value = {"email", "password", "contacts", "balaiosSent", "balaiosReceived"})
+	@JsonIgnoreProperties(value = {"validated", "contacts", "balaiosSent", "balaiosReceived"})
 	@ManyToOne
 	@JoinColumn(name = "USER_ID_TO")
 	private User to;

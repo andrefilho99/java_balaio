@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -39,14 +40,14 @@ public class User {
 	@OneToMany(mappedBy = "to")
 	private List<Balaio> balaiosReceived;
 	
-	@Column(name = "IS_VALIDADED")
-	private boolean isValidaded;
+	@Column(name = "IS_VALIDATED")
+	private boolean isValidated;
 	
 	public User() {
 		contacts = new ArrayList<Contact>();
 		balaiosSent = new ArrayList<Balaio>();
 		balaiosReceived = new ArrayList<Balaio>();
-		isValidaded = false;
+		isValidated = false;
 	}
 
 	public Integer getUserId() {
@@ -92,16 +93,30 @@ public class User {
 	public List<Balaio> getBalaiosReceived() {
 		return balaiosReceived;
 	}
+	
+	@JsonIgnore
+	public List<Balaio> getBalaiosNotFound() {
+		
+		List<Balaio> balaiosNotFound = new ArrayList<Balaio>();
+		
+		for(Balaio balaio : balaiosReceived) {
+			if(!balaio.getFound()) {
+				balaiosNotFound.add(balaio);
+			}
+		}
+		
+		return balaiosNotFound;
+	}
 
 	public void setBalaiosReceived(List<Balaio> balaiosReceived) {
 		this.balaiosReceived = balaiosReceived;
 	}
 
-	public boolean isValidaded() {
-		return isValidaded;
+	public boolean isValidated() {
+		return isValidated;
 	}
 
-	public void setValidaded(boolean isValidaded) {
-		this.isValidaded = isValidaded;
+	public void setValidated(boolean isValidated) {
+		this.isValidated = isValidated;
 	}
 }

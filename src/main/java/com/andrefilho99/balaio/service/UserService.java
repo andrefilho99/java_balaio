@@ -42,7 +42,7 @@ public class UserService {
 			throw new TokenException("The given token is not valid.");
 		}
 		
-		user.setValidaded(true);
+		user.setValidated(true);
 		userRepository.save(user);
 	}
 	
