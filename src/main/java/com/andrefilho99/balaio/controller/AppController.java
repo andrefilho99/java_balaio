@@ -14,11 +14,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.andrefilho99.balaio.exception.BalaioException;
 import com.andrefilho99.balaio.exception.TokenException;
-import com.andrefilho99.balaio.exception.UserNotFoundException;
 import com.andrefilho99.balaio.model.Balaio;
 import com.andrefilho99.balaio.model.User;
 import com.andrefilho99.balaio.service.BalaioService;
-import com.andrefilho99.balaio.service.ContactService;
 import com.andrefilho99.balaio.service.UserService;
 
 @RestController
@@ -27,9 +25,6 @@ public class AppController {
 
 	@Autowired
 	private UserService userService;
-	
-	@Autowired
-	private ContactService contactService;
 	
 	@Autowired
 	private BalaioService balaioService;
@@ -60,22 +55,11 @@ public class AppController {
 		return userService.getAll();
 	}
 	
-	//Contact
-	
-	@PostMapping(value = "/{userId}/contacts")
-	public void addContact(@PathVariable("userId")Integer userId, @RequestHeader("nickname") String nickname){
-		try {
-			contactService.create(userService.get(userId), userService.getByNickname(nickname));
-		} catch(UserNotFoundException ex) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
-		}
-	}
-	
 	//Balaio
 	
 	@PostMapping(value = "/{userId}/balaios")
-	public void createBalaio(@PathVariable("userId")Integer userId, @RequestHeader("message") String message, @RequestHeader("to") String nickname, @RequestHeader("latitude") Double latitude, @RequestHeader("longitude") Double longitude){
-		balaioService.create(message, userService.get(userId), userService.getByNickname(nickname), latitude, longitude);
+	public void createBalaio(@PathVariable("number")String number, @RequestHeader("message") String message, @RequestHeader("to") String nickname, @RequestHeader("latitude") Double latitude, @RequestHeader("longitude") Double longitude){
+		balaioService.create(message, userService.getByNumber(number), userService.getByNickname(nickname), latitude, longitude);
 	}
 	
 	@GetMapping(value = "/{userId}/balaios/search", produces = "application/json")

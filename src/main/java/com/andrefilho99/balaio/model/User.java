@@ -29,9 +29,6 @@ public class User {
 	@Column(name = "number")
 	private String number;
 	
-	@OneToMany(mappedBy = "from")
-	private List<Contact> contacts;
-	
 	@JsonIgnoreProperties(value = {"from"})
 	@OneToMany(mappedBy = "from")
 	private List<Balaio> balaiosSent;
@@ -44,7 +41,6 @@ public class User {
 	private boolean isValidated;
 	
 	public User() {
-		contacts = new ArrayList<Contact>();
 		balaiosSent = new ArrayList<Balaio>();
 		balaiosReceived = new ArrayList<Balaio>();
 		isValidated = false;
@@ -72,14 +68,6 @@ public class User {
 
 	public void setNumber(String number) {
 		this.number = number;
-	}
-
-	public List<Contact> getContacts() {
-		return contacts;
-	}
-
-	public void setContacts(List<Contact> contacts) {
-		this.contacts = contacts;
 	}
 
 	public List<Balaio> getBalaiosSent() {

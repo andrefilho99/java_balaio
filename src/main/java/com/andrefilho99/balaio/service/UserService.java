@@ -57,6 +57,17 @@ public class UserService {
 		return user.get();
 	}
 	
+	public User getByNumber(String number) {
+		
+		User user = userRepository.findByNumber(number);
+		
+		if(user == null) {
+			throw new UserNotFoundException("There is no user with the given number.");
+		}
+		
+		return user;
+	}
+	
 	public void update(Integer id, String nickname) {
 		
 		User user = userRepository.getOne(id);

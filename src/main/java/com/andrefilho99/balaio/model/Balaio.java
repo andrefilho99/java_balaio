@@ -24,12 +24,12 @@ public class Balaio {
 	@Column(name = "MESSAGE")
 	private String message;
 	
-	@JsonIgnoreProperties(value = {"validated", "contacts", "balaiosSent", "balaiosReceived"})
+	@JsonIgnoreProperties(value = {"validated", "balaiosSent", "balaiosReceived"})
 	@ManyToOne
 	@JoinColumn(name = "USER_ID_FROM")
 	private User from;
 	
-	@JsonIgnoreProperties(value = {"validated", "contacts", "balaiosSent", "balaiosReceived"})
+	@JsonIgnoreProperties(value = {"validated", "balaiosSent", "balaiosReceived"})
 	@ManyToOne
 	@JoinColumn(name = "USER_ID_TO")
 	private User to;
