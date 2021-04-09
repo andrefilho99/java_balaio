@@ -17,6 +17,9 @@ public class UserService {
 	@Autowired
 	private UserRepository userRepository;
 	
+	@Autowired
+	private SmsService smsService;
+	
 	//CRUD
 	
 	public User create(String nickname, String number) {
@@ -27,6 +30,7 @@ public class UserService {
 		user.setNumber(number);
 		
 		userRepository.save(user);
+		smsService.notifyNewUser(number, number.substring(number.length()-5));
 		
 		return user;
 	}
@@ -36,9 +40,9 @@ public class UserService {
 		User user = userRepository.findById(id).get();
 		String userNumber = user.getNumber();
 		
-		System.out.println(userNumber.substring(5));
+		System.out.println(userNumber.substring(userNumber.length()-5));
 		
-		if(!userNumber.substring(5).equals(token)) {
+		if(!userNumber.substring(userNumber.length()-5).equals(token)) {
 			throw new TokenException("The given token is not valid.");
 		}
 		
@@ -62,6 +66,7 @@ public class UserService {
 		User user = userRepository.findByNumber(number);
 		
 		if(user == null) {
+			smsService.notifyNumber(number);
 			throw new UserNotFoundException("There is no user with the given number.");
 		}
 		

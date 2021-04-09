@@ -14,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.andrefilho99.balaio.exception.BalaioException;
 import com.andrefilho99.balaio.exception.TokenException;
+import com.andrefilho99.balaio.exception.UserNotFoundException;
 import com.andrefilho99.balaio.model.Balaio;
 import com.andrefilho99.balaio.model.User;
 import com.andrefilho99.balaio.service.BalaioService;
@@ -58,8 +59,13 @@ public class AppController {
 	//Balaio
 	
 	@PostMapping(value = "/{userId}/balaios")
-	public void createBalaio(@PathVariable("number")String number, @RequestHeader("message") String message, @RequestHeader("to") String nickname, @RequestHeader("latitude") Double latitude, @RequestHeader("longitude") Double longitude){
-		balaioService.create(message, userService.getByNumber(number), userService.getByNickname(nickname), latitude, longitude);
+	public void createBalaio(@PathVariable("userId")Integer userId, @RequestHeader("message") String message, @RequestHeader("to") String number, @RequestHeader("latitude") Double latitude, @RequestHeader("longitude") Double longitude){
+		
+		try {
+			balaioService.create(message, userService.get(userId), userService.getByNumber(number), latitude, longitude);
+		} catch(UserNotFoundException ex) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+		}
 	}
 	
 	@GetMapping(value = "/{userId}/balaios/search", produces = "application/json")
