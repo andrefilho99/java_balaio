@@ -26,11 +26,15 @@ public class UserService {
 		
 		User user = new User();
 		
+		if(getByNumber(number) != null) {
+			user = getByNumber(number);
+		}
+		
 		user.setNickname(nickname);
 		user.setNumber(number);
 		
 		userRepository.save(user);
-		smsService.notifyNewUser(number, number.substring(number.length()-5));
+		//smsService.notifyNewUser(number, number.substring(number.length()-5));
 		
 		return user;
 	}
@@ -50,6 +54,19 @@ public class UserService {
 		userRepository.save(user);
 	}
 	
+	public User login(String number) {
+		
+		User user = userRepository.findByNumber(number);
+		
+		if(user == null) {
+			throw new UserNotFoundException("There is no user with the given number.");
+		} else if(!user.isValidated()) {
+			throw new TokenException("User isn't validated.");
+		}
+		
+		return user;
+	}
+	
 	public User get(Integer id) {
 		
 		Optional<User> user = userRepository.findById(id);
@@ -66,8 +83,11 @@ public class UserService {
 		User user = userRepository.findByNumber(number);
 		
 		if(user == null) {
-			smsService.notifyNumber(number);
-			throw new UserNotFoundException("There is no user with the given number.");
+			
+			//smsService.notifyNumber(number);
+			user = new User();
+			user.setNumber(number);
+			userRepository.save(user);
 		}
 		
 		return user;

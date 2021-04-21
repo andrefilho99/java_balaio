@@ -46,6 +46,17 @@ public class AppController {
 		}
 	}
 	
+	@PostMapping(value = "/login")
+	public User login(@RequestHeader("number") String number) {
+		try {
+			return userService.login(number);
+		} catch(TokenException ex) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage());
+		} catch(UserNotFoundException ex) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+		}
+	}
+	
 	@GetMapping(value = "/{userId}", produces = "application/json")
 	public User getUser(@PathVariable("userId")Integer userId) {
 		return userService.get(userId);
@@ -72,6 +83,33 @@ public class AppController {
 	public Balaio searchBalaio(@PathVariable("userId")Integer userId, @RequestHeader("latitude") Double latitude, @RequestHeader("longitude") Double longitude) {
 		try {
 			return balaioService.getByDistance(userId, latitude, longitude);
+		} catch(BalaioException ex) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+		}
+	}
+	
+	@GetMapping(value = "/{userId}/balaios", produces = "application/json")
+	public List<Balaio> getBalaio(@PathVariable("userId")Integer userId) {
+		try {
+			return balaioService.getBalaio(userId);
+		} catch(BalaioException ex) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+		}
+	}
+	
+	@GetMapping(value = "/{userId}/balaios/found", produces = "application/json")
+	public List<Balaio> getBalaioFound(@PathVariable("userId")Integer userId) {
+		try {
+			return balaioService.getBalaiosFound(userId);
+		} catch(BalaioException ex) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+		}
+	}
+	
+	@GetMapping(value = "/{userId}/balaios/sent", produces = "application/json")
+	public List<Balaio> getBalaioSent(@PathVariable("userId")Integer userId) {
+		try {
+			return balaioService.getBalaiosSent(userId);
 		} catch(BalaioException ex) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
 		}

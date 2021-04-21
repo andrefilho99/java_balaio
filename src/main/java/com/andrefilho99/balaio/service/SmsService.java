@@ -9,8 +9,8 @@ import com.twilio.type.PhoneNumber;
 @Service
 public class SmsService {
 	
-	public static final String ACCOUNT_SID = "";
-	public static final String AUTH_TOKEN = "";
+	public static final String ACCOUNT_SID = "AC270297f46755763ea730043e5428f7aa";
+	public static final String AUTH_TOKEN = "34a2fc2518d82f1a282607a1e7385bba";
 	
 	public void notifyNumber(String number) {
 		
