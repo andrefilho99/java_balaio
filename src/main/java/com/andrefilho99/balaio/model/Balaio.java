@@ -1,5 +1,7 @@
 package com.andrefilho99.balaio.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.andrefilho99.balaio.utils.MessageUtils;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -40,11 +43,16 @@ public class Balaio {
 	@Column(name = "LONGITUDE")
 	private double longitude;
 	
+	@JsonFormat(timezone = "GMT-03:00", pattern="dd/MM/yyyy hh:mm")
+	@Column(name = "CREATED")
+	private Date date;
+	
 	@Column(name = "FOUND")
 	private Boolean found;
 
 	public Balaio() {
 		found = false;
+		date = new Date();
 	}
 	
 	public Integer getBalaioId() {
@@ -94,6 +102,14 @@ public class Balaio {
 
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
+	}
+	
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
 	public Boolean getFound() {

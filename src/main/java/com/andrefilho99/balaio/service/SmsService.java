@@ -10,7 +10,7 @@ import com.twilio.type.PhoneNumber;
 public class SmsService {
 	
 	public static final String ACCOUNT_SID = "AC270297f46755763ea730043e5428f7aa";
-	public static final String AUTH_TOKEN = "34a2fc2518d82f1a282607a1e7385bba";
+	public static final String AUTH_TOKEN = "ffe988623f1a512725b0b869168229b2";
 	
 	public void notifyNumber(String number) {
 		

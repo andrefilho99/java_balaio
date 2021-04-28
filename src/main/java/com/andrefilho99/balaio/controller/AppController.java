@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,6 +36,11 @@ public class AppController {
 	@PostMapping(produces = "application/json")
 	public User createUser(@RequestHeader("nickname") String nickname, @RequestHeader("number") String number) {
 		return userService.create(nickname, number);
+	}
+	
+	@DeleteMapping(value = "/{userId}")
+	public void deleteUser(@PathVariable("userId")Integer userId) {
+		userService.delete(userId);
 	}
 	
 	@PostMapping(value = "/{userId}/validate")
@@ -70,19 +76,19 @@ public class AppController {
 	//Balaio
 	
 	@PostMapping(value = "/{userId}/balaios")
-	public void createBalaio(@PathVariable("userId")Integer userId, @RequestHeader("message") String message, @RequestHeader("to") String number, @RequestHeader("latitude") Double latitude, @RequestHeader("longitude") Double longitude){
+	public void createBalaio(@PathVariable("userId")Integer userId, @RequestHeader("message") String message, @RequestHeader("to") String number, @RequestHeader("latitude") String latitude, @RequestHeader("longitude") String longitude){
 		
 		try {
-			balaioService.create(message, userService.get(userId), userService.getByNumber(number), latitude, longitude);
+			balaioService.create(message, userService.get(userId), userService.getByNumber(number), Double.parseDouble(latitude), Double.parseDouble(longitude));
 		} catch(UserNotFoundException ex) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
 		}
 	}
 	
 	@GetMapping(value = "/{userId}/balaios/search", produces = "application/json")
-	public Balaio searchBalaio(@PathVariable("userId")Integer userId, @RequestHeader("latitude") Double latitude, @RequestHeader("longitude") Double longitude) {
+	public Balaio searchBalaio(@PathVariable("userId")Integer userId, @RequestHeader("latitude") String latitude, @RequestHeader("longitude") String longitude) {
 		try {
-			return balaioService.getByDistance(userId, latitude, longitude);
+			return balaioService.getByDistance(userId, Double.parseDouble(latitude), Double.parseDouble(longitude));
 		} catch(BalaioException ex) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
 		}

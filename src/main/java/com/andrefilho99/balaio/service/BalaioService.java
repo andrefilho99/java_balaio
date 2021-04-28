@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.andrefilho99.balaio.exception.BalaioException;
-import com.andrefilho99.balaio.exception.UserNotFoundException;
 import com.andrefilho99.balaio.model.Balaio;
 import com.andrefilho99.balaio.model.User;
 import com.andrefilho99.balaio.repository.BalaioRepository;
@@ -123,15 +122,7 @@ public class BalaioService {
 	
 	public List<Balaio> getBalaiosFound(Integer userId) {
 		
-		List<Balaio> balaios = new ArrayList<Balaio>();
-		User user = userService.get(userId);
-		
-		for(Balaio balaio : user.getBalaiosReceived()) {
-			
-			if(!balaios.contains(balaio) && balaio.getFound()) {
-				balaios.add(balaio);
-			}
-		}
+		List<Balaio> balaios = balaioRepository.getBalaiosFound(userId);
 		
 		if(balaios.isEmpty()) {
 			throw new BalaioException("You have no balaios.");
